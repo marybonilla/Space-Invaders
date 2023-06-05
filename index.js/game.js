@@ -1,15 +1,24 @@
 class Game {
     constructor(ctx) {
-      this.ctx = ctx;
-      this.background = new Background(this.ctx);
-      this.player = new Player(this.ctx);
-      this.invaders = [];
-  
-      this.intervalId = null;
-  
-      this.levelSpeed = 0;
-      this.counter = 0;
-      this.score = 0;
+        this.ctx = ctx;
+        this.background = new Background(this.ctx);
+        this.player = new Player(this.ctx);
+        this.bullet = new Bullet(this.ctx, this.player.x + 15 , this.player.y, -5);
+        // como voy a poner varios enemy creo un array con las imagenes
+        this.invaderImages = [
+          './img/enemy1.png',
+          './img/enemy2.png',
+          './img/enemy3.png'
+        ];
+        this.invaders = [];
+    
+        this.intervalId = null;
+    
+        this.levelSpeed = 0;
+        this.counter = 0;
+        this.score = 0;
+
+    
     }
   
     start() {
@@ -40,7 +49,9 @@ class Game {
       this.invaders.forEach((invader) => {
         invader.draw();
       });
+      this.bullet.draw();
       this.player.draw();
+      
     }
   
     move() {
@@ -48,6 +59,7 @@ class Game {
         invader.move();
       });
       this.player.move();
+      this.bullet.move();
     }
   
     clear() {
@@ -61,16 +73,16 @@ class Game {
         const groupSize = 5; // Tamaño del grupo de invasores
         const groupSpacing = 10; // Espaciado entre los invasores en el grupo
         const invaderWidth = 25;
-        const invaderHeight = 25;
+        //const invaderHeight = 25;
         const invaderSpeedX = 0; // Velocidad horizontal
         const invaderSpeedY = 1; // Velocidad vertical
       
         const groupX = Math.floor(Math.random() * (this.ctx.canvas.width - groupSize * (invaderWidth + groupSpacing))); // Posición X inicial del grupo
       
         Array.from({ length: groupSize }).forEach((_, i) => {
-            const x = groupX + i * (invaderWidth + groupSpacing);
+            const x = groupX + i * (invaderWidth + groupSpacing); // va a crear un grupo de del tamaño indicado en groupSize desde el eje X
             const y = 0;
-            const invader = new Invader(this.ctx, invaderSpeedX, invaderSpeedY);
+            const invader = new Invader(this.ctx, invaderSpeedX, invaderSpeedY, this.invaderImages);
             invader.x = x;
             invader.y = y;
             this.invaders.push(invader);

@@ -1,8 +1,8 @@
 class Invader {
-    constructor(ctx, speedX, speedY) {
+    constructor(ctx, speedX, speedY, images) {
       this.ctx = ctx;
-      this.image = new Image();
-      this.image.src = './img/enemy-1-01.png';
+      this.images = images;
+      this.image = new Image(); // Cargar las imagenes desde el game
       this.width = 25;
       this.height = 25;
       this.speedX = speedX;
@@ -15,6 +15,14 @@ class Invader {
         this.width = this.height * this.image.width / this.image.height;
         this.isReady = true;
       };
+  
+      this.setImage();
+    }
+  
+        // Para crear un array de invaders random
+    setImage() {
+      const randomIndex = Math.floor(Math.random() * this.images.length);
+      this.image.src = this.images[randomIndex];
     }
   
     draw() {
@@ -34,11 +42,3 @@ class Invader {
       this.y += this.speedY;
     }
   }
-  
-  
-  
-  
-  
-  
-  
-  
