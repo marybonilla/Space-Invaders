@@ -8,3 +8,4 @@ game.start();
 document.addEventListener("keydown", game.handleKeyDown.bind(game));
 
 document.addEventListener("keyup", game.handleKeyUp.bind(game));
+document.addEventListener("keydown", game.handleKeyDown.bind(game));

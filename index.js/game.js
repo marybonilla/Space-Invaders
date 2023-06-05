@@ -3,7 +3,7 @@ class Game {
         this.ctx = ctx;
         this.background = new Background(this.ctx);
         this.player = new Player(this.ctx);
-        this.bullet = new Bullet(this.ctx, this.player.x + 15 , this.player.y, -5);
+        //this.bullet = new Bullet(this.ctx, this.player.x + 15 , this.player.y, -5);
         // como voy a poner varios enemy creo un array con las imagenes
         this.invaderImages = [
           './img/enemy1.png',
@@ -11,7 +11,7 @@ class Game {
           './img/enemy3.png'
         ];
         this.invaders = [];
-    
+        this.bullets = [];
         this.intervalId = null;
     
         this.levelSpeed = 0;
@@ -49,7 +49,9 @@ class Game {
       this.invaders.forEach((invader) => {
         invader.draw();
       });
-      this.bullet.draw();
+      this.bullets.forEach((bullet) => {
+        bullet.draw();
+      });
       this.player.draw();
       
     }
@@ -58,8 +60,12 @@ class Game {
       this.invaders.forEach((invader) => {
         invader.move();
       });
+
       this.player.move();
-      this.bullet.move();
+      
+      this.bullets.forEach((bullet) => {
+        bullet.move();
+      });
     }
   
     clear() {
@@ -67,7 +73,10 @@ class Game {
       this.invaders = this.invaders.filter(
         (invader) => invader.x > -invader.width
       );
-    }
+      this.bullets = this.bullets.filter((bullet) => bullet.y > 0);
+    } 
+
+
   
     addInvader() {
         const groupSize = 5; // Tamaño del grupo de invasores
@@ -89,24 +98,28 @@ class Game {
           });
       }
   
-    handleKeyDown(event) {
-      if (!event.repeat) {
-        switch (event.code) {
-          case "ArrowLeft":
-            this.player.speedX = -5;
-            break;
-          case "ArrowRight":
-            this.player.speedX = 5;
-            break;
-          case "ArrowUp":
-            this.player.speedY = -5;
-            break;
-          case "ArrowDown":
-            this.player.speedY = 5;
-            break;
+      handleKeyDown(event) {
+        if (!event.repeat) {
+          switch (event.code) {
+            case "ArrowLeft":
+              this.player.speedX = -5;
+              break;
+            case "ArrowRight":
+              this.player.speedX = 5;
+              break;
+            case "ArrowUp":
+              this.player.speedY = -5;
+              break;
+            case "ArrowDown":
+              this.player.speedY = 5;
+              break;
+            case "Space":
+              const bullet = new Bullet(this.ctx, this.player.x + 15, this.player.y, -5, 0);
+              this.bullets.push(bullet);
+              break;
+          }
         }
       }
-    }
   
     handleKeyUp(event) {
       if (event.code === "ArrowLeft" || event.code === "ArrowRight") {
@@ -116,4 +129,11 @@ class Game {
         this.player.speedY = 0;
       }
     }
-  }
+
+    
+
+
+
+
+
+}

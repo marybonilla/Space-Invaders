@@ -34,7 +34,7 @@ class Player {
 
     move (){
         this.x += this.speedX;
-      this.y += this.speedY;
+        this.y += this.speedY;
   
       if (this.x <= 0) {
         this.x = 0;
@@ -53,14 +53,6 @@ class Player {
       }
 
     }
-
-
-    shoot(){
-
-    }
-
-
-
 
 
 }
