@@ -41,4 +41,23 @@ class Invader {
       this.x += this.speedX;
       this.y += this.speedY;
     }
-  }
+
+    // para que dispare los bullets enemy
+
+    shoot() {
+      const bullet = new BulletEnemy(
+        this.ctx,
+        this.x + this.width / 2,
+        this.y + this.height,
+        3,
+        15,
+        "red",
+        5
+      );
+      return bullet;
+    }
+  
+
+
+
+ }

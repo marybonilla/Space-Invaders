@@ -11,7 +11,12 @@ class Game {
           './img/enemy3.png'
         ];
         this.invaders = [];
+        // bullet de player
         this.bullets = [];
+        // bullet de los enemigos
+        this.bulletsEnemy = [];
+
+
         this.intervalId = null;
     
         this.levelSpeed = 0;
@@ -41,7 +46,19 @@ class Game {
           this.invaders.forEach((invader) => (invader.speed += 1));
           this.counter = 0;
         }
-      }, 4000 / 60);
+
+        if (this.counter % 100 === 0) {
+          this.handleInvaderShoot();
+        }
+
+        /*if (this.counter % 100 === 0) {
+          this.addBulletEnemy();
+        }*/
+
+
+
+
+      }, 1000 / 60);
     }
   
     draw() {
@@ -51,6 +68,11 @@ class Game {
       });
       this.bullets.forEach((bullet) => {
         bullet.draw();
+      });
+      this.player.draw();
+
+      this.bulletsEnemy.forEach((bulletEnemy) => {
+        bulletEnemy.draw();
       });
       this.player.draw();
       
@@ -66,6 +88,11 @@ class Game {
       this.bullets.forEach((bullet) => {
         bullet.move();
       });
+
+      this.bulletsEnemy.forEach((bulletEnemy) => {
+        bulletEnemy.move();
+      });
+
     }
   
     clear() {
@@ -74,6 +101,8 @@ class Game {
         (invader) => invader.x > -invader.width
       );
       this.bullets = this.bullets.filter((bullet) => bullet.y > 0);
+
+      this.bulletsEnemy = this.bulletsEnemy.filter((bulletEnemy) => bulletEnemy.y < this.ctx.canvas.height);
     } 
 
 
@@ -81,14 +110,15 @@ class Game {
     addInvader() {
         const groupSize = 5; // Tamaño del grupo de invasores
         const groupSpacing = 10; // Espaciado entre los invasores en el grupo
-        const invaderWidth = 25;
+        const invaderWidth = 15;
         //const invaderHeight = 25;
         const invaderSpeedX = 0; // Velocidad horizontal
         const invaderSpeedY = 1; // Velocidad vertical
       
         const groupX = Math.floor(Math.random() * (this.ctx.canvas.width - groupSize * (invaderWidth + groupSpacing))); // Posición X inicial del grupo
-      
-        Array.from({ length: groupSize }).forEach((_, i) => {
+
+
+          Array.from({ length: groupSize }).forEach((_, i) => {
             const x = groupX + i * (invaderWidth + groupSpacing); // va a crear un grupo de del tamaño indicado en groupSize desde el eje X
             const y = 0;
             const invader = new Invader(this.ctx, invaderSpeedX, invaderSpeedY, this.invaderImages);
@@ -97,6 +127,33 @@ class Game {
             this.invaders.push(invader);
           });
       }
+
+      // agregar balas enemigas desde el invasor
+
+      handleInvaderShoot() {
+
+        this.invaders.forEach((invader, i) => {
+          if (i % 3 === 0) {
+            const bulletEnemy = invader.shoot();
+            this.bulletsEnemy.push(bulletEnemy);
+          }
+          
+        });
+      }
+
+      /*addBulletEnemy() {
+        const Height = 15;
+        const width = 3;
+        const randomX = Math.floor(Math.random() * (this.ctx.canvas.width - Height));
+
+        //const y = this.ctx.canvas.width;
+        const color = "red";
+        const speed = this.levelSpeed;
+        const newBulletEnemy = new BulletEnemy(this.ctx, randomX, 0, width, Height, color, speed);
+        this.bulletsEnemy.push(newBulletEnemy);
+      } */
+
+
   
       handleKeyDown(event) {
         if (!event.repeat) {
