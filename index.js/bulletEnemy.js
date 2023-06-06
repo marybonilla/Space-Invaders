@@ -22,4 +22,16 @@ class BulletEnemy{
     clear (){
         this.ctx.clearRect(this.x, this.y, this.width, this.height);
     }
+
+      // colicion con el jugador
+      
+    collidesWith(player) {
+      return player.x + player.width >= this.x &&
+        player.x <= this.x + this.width &&
+        player.y + player.height >= this.y &&
+        player.y <= this.y + this.height;
+    }
+
+
+
 }

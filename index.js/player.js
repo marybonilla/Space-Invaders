@@ -10,24 +10,32 @@ class Player {
         this.x = 400; 
         this.y = 340; 
         this.isReady = false;
+        this.collisionImage = new Image();
+        this.collisionImage.src = './img/nave_colision.png';
+        this.isCollided = false;
     
         this.image.onload = () => {
           this.width = this.height * this.image.width / this.image.height;
           this.isReady = true;
         };
+
+        this.collisionImage.onload = () => {
+          this.isReady = true;
+        };
+
     }
 
     draw (){
-        if (this.isReady){
-            this.ctx.drawImage(
-                this.image,
-                this.x,
-                this.y,
-                this.width,
-                this.height
-                
-            );
-        }
+      const currentImage = this.isCollided ? this.collisionImage : this.image;
+      if (this.isReady) {
+        this.ctx.drawImage(
+          currentImage,
+          this.x,
+          this.y,
+          this.width,
+          this.height
+        );
+      }
 
     }
 

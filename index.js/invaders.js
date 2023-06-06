@@ -45,7 +45,7 @@ class Invader {
     // para que dispare los bullets enemy
 
     shoot() {
-      const bullet = new BulletEnemy(
+      const bulletEnemy = new BulletEnemy(
         this.ctx,
         this.x + this.width / 2,
         this.y + this.height,
@@ -54,7 +54,7 @@ class Invader {
         "red",
         5
       );
-      return bullet;
+      return bulletEnemy;
     }
   
 
