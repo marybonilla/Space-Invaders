@@ -55,4 +55,16 @@ class Bullet {
       // Eliminar la imagen del bullet  del lienzo
       this.ctx.clearRect(this.x, this.y, this.width, this.height);
     }
+
+
+     // colicion con los invaders (si los bullet dispara y le da a un enemy)
+
+    collidesWith(invader) {
+      return invader.x + invader.width >= this.x &&
+      invader.x <= this.x + this.width &&
+      invader.y + invader.height >= this.y &&
+      invader.y <= this.y + this.height;
+    }
+
+
   }

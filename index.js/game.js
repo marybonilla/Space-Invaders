@@ -32,6 +32,7 @@ class Game {
         this.draw();
         this.counter++;
         this.checkCollisions();
+        this.checkCollisionsE();
   
         if (this.counter % 200 === 0) {
           this.addInvader();
@@ -41,11 +42,11 @@ class Game {
           this.score++;
         }
   
-        if (this.counter === 200) {
+        /*if (this.counter === 200) {
           this.levelSpeed += 1;
           this.invaders.forEach((invader) => (invader.speed += 1));
           this.counter = 0;
-        }
+        }*/
 
         if (this.counter % 100 === 0) {
           this.handleInvaderShoot();
@@ -56,17 +57,20 @@ class Game {
 
 
 
-      }, 1000 / 60);
+      }, 3000 / 60);
     }
   
     draw() {
       this.background.draw();
+
       this.invaders.forEach((invader) => {
         invader.draw();
       });
+
       this.bullets.forEach((bullet) => {
         bullet.draw();
       });
+
       this.player.draw();
 
       this.bulletsEnemy.forEach((bulletEnemy) => {
@@ -103,12 +107,13 @@ class Game {
       this.bullets = this.bullets.filter((bullet) => bullet.y > 0);
 
       this.bulletsEnemy = this.bulletsEnemy.filter((bulletEnemy) => bulletEnemy.y < this.ctx.canvas.height);
+
     } 
 
 
   
     addInvader() {
-      const groupSize = 20; // Tamaño del grupo de invasores
+      //const groupSize = 20; // Tamaño del grupo de invasores
       const groupSpacing = 10; // Espaciado entre los invasores en el grupo
       const invaderWidth = 15;
       const invaderHeight = 15;
@@ -116,7 +121,7 @@ class Game {
       const invaderSpeedY = 1; // Velocidad vertical
     
       const numRows = 3; // Número de filas de invasores
-      const numCols = 8; // Número de invasores por fila
+      const numCols = 5; // Número de invasores por fila
     
       const groupWidth = numCols * (invaderWidth + groupSpacing) - groupSpacing; // Ancho total del grupo de invasores
       const groupX = Math.floor(Math.random() * (this.ctx.canvas.width - groupWidth)); // Posición X inicial del grupo
@@ -134,15 +139,19 @@ class Game {
       });
     }
 
-      // agregar balas enemigas desde el invasor
+      // agregar balas enemigas desde el invasor de forma random
 
       handleInvaderShoot() {
         setInterval(() => {
-          const randomIndex = Math.floor(Math.random() * this.invaders.length); // Obtener un índice aleatorio de los invaders
-          const invader = this.invaders[randomIndex]; // Obtener el invader correspondiente al índice aleatorio
-          const bulletEnemy = invader.shoot(); // Hacer que el invader dispare
-          this.bulletsEnemy.push(bulletEnemy); // Agregar la bala enemiga al array de balas enemigas
-        }, 2000); // Disparar cada 2 segundos (2000 milisegundos)
+          if (this.invaders.length > 0) {
+            const randomIndex = Math.floor(Math.random() * this.invaders.length);
+            const invader = this.invaders[randomIndex];
+            if (invader) {
+              const bulletEnemy = invader.shoot();
+              this.bulletsEnemy.push(bulletEnemy);
+            }
+          }
+        }, 3000);
       }
 
 
@@ -181,13 +190,42 @@ class Game {
     }
 
 
+    // Cuando el invasor colisiona con el jugados, el jugador muere
+
     checkCollisions() {
-      const collision = this.bulletsEnemy.some((bulletEnemy) => bulletEnemy.collidesWith(this.player));
-      if (collision) {
+      // Verificar colisión con los invasores
+      const invaderCollision = this.invaders.some((invader) => invader.collidesWith(this.player));
+  
+      // Verificar colisión con las balas enemigas
+      const bulletECollision = this.bulletsEnemy.some((bulletEnemy) => bulletEnemy.collidesWith(this.player));
+  
+      if (invaderCollision || bulletECollision) {
         this.player.isCollided = true;
-        //clearInterval(this.intervalId);
+        clearInterval(this.intervalId);
+        this.player.draw();
+
+         
       }
+
     }
+
+    // Cuando la bala de nave colisiona con un invader, el invader muere
+
+    checkCollisionsE() {
+      this.bullets.forEach((bullet) => {
+        const bulletCollisionIndex = this.invaders.findIndex((invader) => bullet.collidesWith(invader));
+        if (bulletCollisionIndex !== -1) {
+          // Se encontró una colisión entre la bala y un enemigo
+          this.invaders.splice(bulletCollisionIndex, 1); // Eliminar el invader del array de invaders
+          bullet.isCollided = true; // Marcar la bala como colisionada para eliminarla posteriormente
+        }
+      });
+    
+      // Eliminar las balas que colisionaron
+      this.bullets = this.bullets.filter((bullet) => !bullet.isCollided);
+    }
+      
+
     
 
     /*gameOver() {

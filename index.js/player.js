@@ -25,9 +25,9 @@ class Player {
 
     }
 
-    draw (){
-      const currentImage = this.isCollided ? this.collisionImage : this.image;
+    draw() {
       if (this.isReady) {
+        const currentImage = this.isCollided ? this.collisionImage : this.image;
         this.ctx.drawImage(
           currentImage,
           this.x,
@@ -36,7 +36,6 @@ class Player {
           this.height
         );
       }
-
     }
 
 

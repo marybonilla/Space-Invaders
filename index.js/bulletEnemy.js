@@ -32,6 +32,8 @@ class BulletEnemy{
         player.y <= this.y + this.height;
     }
 
+   
+
 
 
 }

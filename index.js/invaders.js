@@ -10,6 +10,7 @@ class Invader {
       this.x = 0;
       this.y = 0;
       this.isReady = false;
+      this.isCollided = false;
   
       this.image.onload = () => {
         this.width = this.height * this.image.width / this.image.height;
@@ -27,8 +28,9 @@ class Invader {
   
     draw() {
       if (this.isReady) {
+        const collisionEnemy = this.isCollided ? this.collisionImage : this.image;
         this.ctx.drawImage(
-          this.image,
+          collisionEnemy,
           this.x,
           this.y,
           this.width,
@@ -55,6 +57,17 @@ class Invader {
         5
       );
       return bulletEnemy;
+    }
+
+    // colicion con el jugador
+      
+    collidesWith(player) {
+      return (
+        player.x + player.width > this.x &&
+        player.x < this.x + this.width &&
+        player.y + player.height > this.y &&
+        player.y < this.y + this.height
+      );
     }
   
 
