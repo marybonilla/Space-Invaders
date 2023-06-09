@@ -6,7 +6,7 @@ class Background {
         this.width = this.ctx.canvas.width;
         this.height = this.ctx.canvas.height;
         this.image = new Image();
-        this.image.src = 'https://cdn.spacetelescope.org/archives/images/screen/heic1304c.jpg';
+        this.image.src = './img/bg-1.jpeg';
         this.isReady = false;
         
         

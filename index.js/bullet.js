@@ -15,6 +15,9 @@ class Bullet {
         this.width = this.height * this.image.width / this.image.height;
         this.isReady = true;
       };
+      this.sound = new Audio();
+      this.sound.src = './sound/bullet.wav';
+
     }
   
     draw() {
@@ -60,10 +63,16 @@ class Bullet {
      // colicion con los invaders (si los bullet dispara y le da a un enemy)
 
     collidesWith(invader) {
-      return invader.x + invader.width >= this.x &&
+      const collision = invader.x + invader.width >= this.x &&
       invader.x <= this.x + this.width &&
       invader.y + invader.height >= this.y &&
       invader.y <= this.y + this.height;
+
+      if (collision) {
+        this.sound.play();
+      }
+  
+      return collision;
     }
 
 

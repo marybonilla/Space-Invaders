@@ -57,6 +57,7 @@ class Invader {
         5
       );
       return bulletEnemy;
+
     }
 
     // colicion con el jugador

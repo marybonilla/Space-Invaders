@@ -3,6 +3,7 @@ class Game {
         this.ctx = ctx;
         this.background = new Background(this.ctx);
         this.player = new Player(this.ctx);
+        this.heart = new Heart(this.ctx);
         // como voy a poner varios enemy creo un array con las imagenes
         this.invaderImages = [
           './img/enemy1.png',
@@ -21,6 +22,10 @@ class Game {
         this.levelSpeed = 0;
         this.counter = 0;
         this.score = 0;
+        this.lives = 3;
+        this.bulletSound = new Audio('./sound/bulletNave.wav');
+        this.explosionPlayer = new Audio('./sound/explosion.wav');
+        
 
     
     }
@@ -30,17 +35,18 @@ class Game {
         this.clear();
         this.move();
         this.draw();
-        this.counter++;
         this.checkCollisions();
         this.checkCollisionsE();
+        
+        this.counter++;
   
         if (this.counter % 200 === 0) {
           this.addInvader();
         }
   
-        if (this.counter % 10 === 0) {
+        /*if (this.counter % 10 === 0) {
           this.score++;
-        }
+        }*/
   
         /*if (this.counter === 200) {
           this.levelSpeed += 1;
@@ -57,7 +63,7 @@ class Game {
 
 
 
-      }, 3000 / 60);
+      }, 1000 / 60);
     }
   
     draw() {
@@ -76,6 +82,10 @@ class Game {
       this.bulletsEnemy.forEach((bulletEnemy) => {
         bulletEnemy.draw();
       });
+
+      this.drawScore();
+      this.drawLives();
+      this.heart.draw();
 
 
 
@@ -174,6 +184,7 @@ class Game {
               break;
             case "Space":
               const bullet = new Bullet(this.ctx, this.player.x + 15, this.player.y, -5, 0);
+              this.bulletSound.play();
               this.bullets.push(bullet);
               break;
           }
@@ -193,20 +204,26 @@ class Game {
     // Cuando el invasor colisiona con el jugados, el jugador muere
 
     checkCollisions() {
-      // Verificar colisión con los invasores
-      const invaderCollision = this.invaders.some((invader) => invader.collidesWith(this.player));
-  
-      // Verificar colisión con las balas enemigas
-      const bulletECollision = this.bulletsEnemy.some((bulletEnemy) => bulletEnemy.collidesWith(this.player));
-  
-      if (invaderCollision || bulletECollision) {
-        this.player.isCollided = true;
-        clearInterval(this.intervalId);
-        this.player.draw();
-
-         
+      const invaderCollisionIndex = this.invaders.findIndex((invader) => invader.collidesWith(this.player));
+      const bulletECollisionIndex = this.bulletsEnemy.findIndex((bulletEnemy) => bulletEnemy.collidesWith(this.player));
+    
+      if (invaderCollisionIndex !== -1 || bulletECollisionIndex !== -1) {
+        this.lives--;
+    
+        if (this.lives < 1) {
+          this.player.isCollided = true;
+          clearInterval(this.intervalId);
+          this.player.draw();
+          this.explosionPlayer.play();
+        } else {
+          if (invaderCollisionIndex !== -1) {
+            this.invaders[invaderCollisionIndex].isCollided = true;
+          }
+          if (bulletECollisionIndex !== -1) {
+            this.bulletsEnemy[bulletECollisionIndex].isCollided = true;
+          }
+        }
       }
-
     }
 
     // Cuando la bala de nave colisiona con un invader, el invader muere
@@ -215,16 +232,30 @@ class Game {
       this.bullets.forEach((bullet) => {
         const bulletCollisionIndex = this.invaders.findIndex((invader) => bullet.collidesWith(invader));
         if (bulletCollisionIndex !== -1) {
-          // Se encontró una colisión entre la bala y un enemigo
-          this.invaders.splice(bulletCollisionIndex, 1); // Eliminar el invader del array de invaders
-          bullet.isCollided = true; // Marcar la bala como colisionada para eliminarla posteriormente
+          this.invaders[bulletCollisionIndex].isCollided = true;
+          bullet.isCollided = true;
+          this.score += 5;
         }
       });
     
-      // Eliminar las balas que colisionaron
+      // Eliminar los invasores y las balas colisionadas
+      this.invaders = this.invaders.filter((invader) => !invader.isCollided);
       this.bullets = this.bullets.filter((bullet) => !bullet.isCollided);
+      this.bulletsEnemy = this.bulletsEnemy.filter((bulletEnemy) => !bulletEnemy.isCollided);
     }
-      
+
+    drawScore() {
+      this.ctx.font = "22px Arial";
+      this.ctx.fillStyle = "white";
+      this.ctx.fillText(`Score: ${this.score}`, 10, 30);
+    }
+    drawLives() {
+      this.image = new Image();
+      this.image.src = './img/heart.png';
+      this.ctx.font = "25px Arial";
+      this.ctx.fillStyle = "white";
+      this.ctx.fillText(`${this.lives}`, 730, 30);
+    }
 
     
 

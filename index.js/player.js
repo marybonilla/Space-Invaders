@@ -8,7 +8,7 @@ class Player {
         this.speedX = 0;
         this.speedY = 0;
         this.x = 400; 
-        this.y = 340; 
+        this.y = 540; 
         this.isReady = false;
         this.collisionImage = new Image();
         this.collisionImage.src = './img/nave_colision.png';

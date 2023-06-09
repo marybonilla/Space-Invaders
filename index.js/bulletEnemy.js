@@ -7,6 +7,8 @@ class BulletEnemy{
         this.height = height;
         this.color = color;
         this.speed = speed;
+        this.sound = new Audio();
+      this.sound.src = './sound/disparoEnemy.wav';
       }
     
       draw() {
@@ -26,10 +28,16 @@ class BulletEnemy{
       // colicion con el jugador
       
     collidesWith(player) {
-      return player.x + player.width >= this.x &&
+      const enemy = player.x + player.width >= this.x &&
         player.x <= this.x + this.width &&
         player.y + player.height >= this.y &&
         player.y <= this.y + this.height;
+
+        if (enemy) {
+          this.sound.play();
+        }
+    
+        return enemy;
     }
 
    
