@@ -8,7 +8,7 @@ class BulletEnemy{
         this.color = color;
         this.speed = speed;
         this.sound = new Audio();
-      this.sound.src = './sound/disparoEnemy.wav';
+        this.sound.src = './sound/disparoEnemy.wav';
       }
     
       draw() {
