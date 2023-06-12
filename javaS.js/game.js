@@ -170,6 +170,7 @@ class Game {
 
 
     handleKeyDown(event) {
+      let bulletOffsetX = LEVELS[this.levelSelected].bulletOffsetX;
       if (!event.repeat) {
         switch (event.code) {
           case "ArrowLeft":
@@ -185,7 +186,15 @@ class Game {
             this.player.speedY = 5;
             break;
           case "Space":
-            const bullet = new Bullet(this.ctx, this.player.x + 15, this.player.y, LEVELS[this.levelSelected].bullet, 0, -5);
+            const bullet = new Bullet(
+              this.ctx,
+              this.player.x + bulletOffsetX, 
+              this.player.y, 
+              LEVELS[this.levelSelected].bullet,
+              LEVELS[this.levelSelected].bulletWidth,
+              LEVELS[this.levelSelected].bulletHeight,
+               0, 
+              -5);
             this.bulletSound.play();
             this.bullets.push(bullet);
             break;
@@ -240,7 +249,7 @@ class Game {
         this.invaders[bulletCollisionIndex].isCollided = true;
         bullet.isCollided = true;
         this.score += 2;
-        if (this.score >= 80) {
+        if (this.score >= 10) {
           this.levelUp();
         }
       }
