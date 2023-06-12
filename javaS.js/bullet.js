@@ -1,8 +1,8 @@
 class Bullet {
-    constructor(ctx, x, y, speedY,speedX ) {
+    constructor(ctx, x, y, bulletImageSrc,speedX, speedY) {
       this.ctx = ctx;
       this.image = new Image();
-      this.image.src = './img/bullet-01.png';
+      this.image.src = bulletImageSrc;
       this.width = 10;
       this.height = 12;
       this.speedY = speedY;

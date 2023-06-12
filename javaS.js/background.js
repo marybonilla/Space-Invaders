@@ -1,12 +1,12 @@
 class Background {
-    constructor (ctx){
+    constructor (ctx, imageSrc){
         this.ctx = ctx;
         this.x = 0;
         this.y = 0;
         this.width = this.ctx.canvas.width;
         this.height = this.ctx.canvas.height;
         this.image = new Image();
-        this.image.src = './img/bg-1.jpeg';
+        this.image.src = imageSrc;
         this.isReady = false;
         
         
