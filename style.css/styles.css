@@ -8,6 +8,11 @@
   margin: 0;
   padding: 0;
 }
+.container{
+  width: 810px;
+  height: 610px;
+
+}
 
 #my-canvas {
   position: relative;
@@ -19,8 +24,8 @@
 
 button {
     position: absolute;
-    top: 45%;
-    left: 25%;
+    top: 35%;
+    left: 27%;
     transform: translate(-50%, -50%);
     border: 1px solid #FFFC00;
     padding: 20px;

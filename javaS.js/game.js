@@ -16,6 +16,7 @@ class Game {
       this.bullets = [];
       // bullet de los enemigos
       this.bulletsEnemy = [];
+      this.enemyLevel2 = new EnemyLvl2(ctx);
 
 
       this.intervalId = null;
@@ -24,6 +25,7 @@ class Game {
       this.counter = 0;
       this.score = 0;
       this.lives = 3;
+      this.level = LEVELS[this.levelSelected].levelText;
       this.bulletSound = new Audio('./sound/bulletNave.wav');
       this.explosionPlayer = new Audio('./sound/explosion.wav');
       
@@ -32,6 +34,16 @@ class Game {
   }
 
   start() {
+    setTimeout(() => {
+      this.level = LEVELS[this.levelSelected];
+      this.showLevelText = true;
+    }, 1000);
+
+    // Restablecer la variable showLevelText a false después de 3 segundos
+    setTimeout(() => {
+      this.showLevelText = false;
+    }, 3000);
+
     setTimeout(() => {
       this.addInvader()
     }, 1000)
@@ -44,17 +56,14 @@ class Game {
       
       this.counter++;
 
+      if (this.drawLevel % 900 === 0) {
+        this.clear();
+      }
+
       if (this.counter % 900 === 0) {
         this.addInvader();
       }
 
-      
-
-      /*if (this.counter === 200) {
-        this.levelSpeed += 1;
-        this.invaders.forEach((invader) => (invader.speed += 1));
-        this.counter = 0;
-      }*/
 
       if (this.counter % 100 === 0) {
         this.handleInvaderShoot();
@@ -85,9 +94,16 @@ class Game {
       bulletEnemy.draw();
     });
 
+    this.enemyLevel2.draw();
+
+    /*if (this.level) {
+      this.drawLevel();
+    }*/
+
     this.drawScore();
     this.drawLives();
     this.heart.draw();
+    this.drawLevel();
 
 
 
@@ -108,6 +124,8 @@ class Game {
     this.bulletsEnemy.forEach((bulletEnemy) => {
       bulletEnemy.move();
     });
+
+    this.enemyLevel2.move();
 
   }
 
@@ -163,7 +181,7 @@ class Game {
             this.bulletsEnemy.push(bulletEnemy);
           }
         }
-      }, 3000);
+      }, 2000);
     }
 
 
@@ -237,7 +255,13 @@ class Game {
           this.player.collisionBlackTimer = 2; 
          }
       }
+      if (this.score >= 100) {
+        this.gameOver(true); // Pasamos `true` como argumento para indicar que es una victoria
+        return;
+      }
     }
+
+    
   }
 
   // Cuando la bala de nave colisiona con un invader, el invader muere
@@ -249,8 +273,13 @@ class Game {
         this.invaders[bulletCollisionIndex].isCollided = true;
         bullet.isCollided = true;
         this.score += 2;
-        if (this.score >= 10) {
+        if (this.score >= 20) {
           this.levelUp();
+          
+        }
+        if (this.score >= 100) {
+          this.gameOver(true); // Pasamos `true` como argumento para indicar que es una victoria
+          return;
         }
       }
     });
@@ -274,9 +303,30 @@ class Game {
     this.ctx.fillText(`${this.lives}`, 730, 30);
   }
 
+  drawLevel() {
+    if (this.showLevelText) {
+      this.ctx.font = "18px Press-Start-2P";
+      this.ctx.fillStyle = "white";
+      this.ctx.fillText(
+        this.level.levelText,
+        350,
+        300
+      );
+    }
+    else if (this.levelSelected > 0) {
+      this.ctx.font = "18px Press-Start-2P";
+      this.ctx.fillStyle = "white";
+      this.ctx.fillText(
+        `Level ${this.levelSelected + 1}`,
+        350,
+        300
+      );
+    }
+  }
+
   clearGame() {
     this.invaders = [];
-    
+    this.level = true;
     this.background = new Background(ctx, LEVELS[this.levelSelected].background);
   }
 
@@ -286,35 +336,33 @@ class Game {
   levelUp() {
     if (this.levelSelected < LEVELS.length - 1) {
       this.levelSelected++;
+      this.level =  LEVELS[this.levelSelected].levelText;
+      
       this.clearGame();
 
 
-    } /*else {
-      clearInterval(this.intervalId);
-      console.log('CONGRATS!!!');
-    } */
+    } 
   }
   
-  gameOver() {
+  gameOver(isVictory) {
     clearInterval(this.intervalId);
     setTimeout(() => {
-      //this.clear();
       this.player.draw();
       this.ctx.font = "60px Press-Start-2P";
       this.ctx.fillStyle = "white";
-      this.ctx.fillText(
-        "Game Over",
-        this.ctx.canvas.width / 2 - 100,
-        this.ctx.canvas.height / 2,
-        200);
+      if (isVictory) {
+        this.ctx.fillStyle = "Green";
+        this.ctx.fillText("¡Victory!", this.ctx.canvas.width / 2 - 100, this.ctx.canvas.height / 2, 200);
+      } else {
+        this.ctx.fillText("Game Over", this.ctx.canvas.width / 2 - 100, this.ctx.canvas.height / 2, 200);
+      }
       this.ctx.font = "15px Press-Start-2P";
-      this.ctx.fillText(
-        `Your final score: ${this.score}`,
-        this.ctx.canvas.width / 2 - 140,
-        this.ctx.canvas.height / 2 + 30);
-        
+      this.ctx.fillText(`you final Score: ${this.score}`, this.ctx.canvas.width / 2 - 140, this.ctx.canvas.height / 2 + 30);
     }, 0);
   }
+
+
+
 
 
 

@@ -10,6 +10,7 @@ class Bullet {
       this.x = x;
       this.y = y;
       this.isReady = false;
+      
   
       this.image.onload = () => {
         this.width = this.height * this.image.width / this.image.height;
