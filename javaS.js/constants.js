@@ -4,7 +4,7 @@ const LEVEL_1 = {
     bulletOffsetX: 15,
     bulletWidth:10,
     bulletHeight:12,
-    numRows: 3,
+    numRows: 4,
     numCols: 15,
     levelText: "Level 1",
     
@@ -13,14 +13,15 @@ const LEVEL_1 = {
 
 const LEVEL_2 = {
     background: "../img/BGLEVEL2.jpeg",
-    bullet:"../img/bulletdoble-01.png",
+    bullet: "../img/bulletdoble-01.png",
     bulletOffsetX: 0,
     bulletWidth: 4,
     bulletHeight: 45,
     numRows: 3,
     numCols: 20,
     levelText: "Level 2",
-}
+    
+  };
 
 
 

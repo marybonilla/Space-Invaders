@@ -1,36 +1,27 @@
 class Game {
   constructor(ctx) {
-      this.ctx = ctx;
-      this.levelSelected = 0;
-      this.background = new Background(ctx, LEVELS[this.levelSelected].background); 
-      this.player = new Player(this.ctx);
-      this.heart = new Heart(this.ctx);
-      // como voy a poner varios enemy creo un array con las imagenes
-      this.invaderImages = [
-        './img/enemy1.png',
-        './img/enemy2.png',
-        './img/enemy3.png'
-      ];
-      this.invaders = [];
-      // bullet de player
-      this.bullets = [];
-      // bullet de los enemigos
-      this.bulletsEnemy = [];
-      this.enemyLevel2 = new EnemyLvl2(ctx);
-
-
-      this.intervalId = null;
-  
-      this.levelSpeed = 0;
-      this.counter = 0;
-      this.score = 0;
-      this.lives = 3;
-      this.level = LEVELS[this.levelSelected].levelText;
-      this.bulletSound = new Audio('./sound/bulletNave.wav');
-      this.explosionPlayer = new Audio('./sound/explosion.wav');
-      
-
-  
+    this.ctx = ctx;
+    this.levelSelected = 0;
+    this.background = new Background(ctx, LEVELS[this.levelSelected].background);
+    this.player = new Player(this.ctx);
+    this.heart = new Heart(this.ctx);
+    this.invaderImages = [
+      './img/enemy1.png',
+      './img/enemy2.png',
+      './img/enemy3.png'
+    ];
+    this.invaders = [];
+    this.bullets = [];
+    this.bulletsEnemy = [];
+    this.warrior = new Warrior (this.ctx);
+    this.intervalId = null;
+    this.levelSpeed = 0;
+    this.counter = 0;
+    this.score = 0;
+    this.lives = 3;
+    this.level = LEVELS[this.levelSelected].levelText;
+    this.bulletSound = new Audio('./sound/bulletNave.wav');
+    this.explosionPlayer = new Audio('./sound/explosion.wav');
   }
 
   start() {
@@ -38,25 +29,24 @@ class Game {
       this.level = LEVELS[this.levelSelected];
       this.showLevelText = true;
     }, 1000);
-
-    // Restablecer la variable showLevelText a false después de 3 segundos
+  
     setTimeout(() => {
       this.showLevelText = false;
     }, 3000);
-
+  
     setTimeout(() => {
-      this.addInvader()
-    }, 1000)
+      this.addInvader();
+    }, 1000);
+    
     this.intervalId = setInterval(() => {
       this.clear();
       this.move();
       this.draw();
       this.checkCollisions();
       this.checkCollisionsE();
-      
       this.counter++;
 
-      if (this.drawLevel % 900 === 0) {
+      if (this.counter % 900 === 0) {
         this.clear();
       }
 
@@ -64,16 +54,13 @@ class Game {
         this.addInvader();
       }
 
-
       if (this.counter % 100 === 0) {
         this.handleInvaderShoot();
       }
 
-      
-
-
-
-
+      if (this.score === 80) {
+        this.addWarrior();
+      }
     }, 1000 / 60);
   }
 
@@ -94,20 +81,14 @@ class Game {
       bulletEnemy.draw();
     });
 
-    this.enemyLevel2.draw();
-
-    /*if (this.level) {
-      this.drawLevel();
-    }*/
+    
+    this.warrior.draw();
+    
 
     this.drawScore();
     this.drawLives();
     this.heart.draw();
     this.drawLevel();
-
-
-
-    
   }
 
   move() {
@@ -125,19 +106,16 @@ class Game {
       bulletEnemy.move();
     });
 
-    this.enemyLevel2.move();
-
+    
+    this.warrior.move();
+    
   }
 
   clear() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    this.invaders = this.invaders.filter(
-      (invader) => invader.x > -invader.width
-    );
+    this.invaders = this.invaders.filter((invader) => invader.x > -invader.width);
     this.bullets = this.bullets.filter((bullet) => bullet.y > 0);
-
     this.bulletsEnemy = this.bulletsEnemy.filter((bulletEnemy) => bulletEnemy.y < this.ctx.canvas.height);
-
   } 
 
 
@@ -168,6 +146,14 @@ class Game {
       });
     });
   }
+  addWarrior() {
+    const warrior = new Warrior(this.ctx, 1, 0);
+    warrior.x = Math.floor(Math.random() * (this.ctx.canvas.width - warrior.width));
+    warrior.y = Math.floor(Math.random() * (this.ctx.canvas.height - warrior.height));
+  
+    this.warrior.draw();
+  }
+
 
     // agregar balas enemigas desde el invasor de forma random
 
@@ -255,7 +241,14 @@ class Game {
           this.player.collisionBlackTimer = 2; 
          }
       }
-      if (this.score >= 100) {
+      /*if (this.score === 80 && !this.warrior) {
+        this.warrior = new Warrior(this.ctx, 1, 0);
+        this.warrior.x = Math.floor(Math.random() * (this.ctx.canvas.width - this.warrior.width));
+        this.warrior.y = Math.floor(Math.random() * (this.ctx.canvas.height - this.warrior.height));
+      }*/
+
+    
+      if (this.score >= 1000) {
         this.gameOver(true); // Pasamos `true` como argumento para indicar que es una victoria
         return;
       }
@@ -273,11 +266,11 @@ class Game {
         this.invaders[bulletCollisionIndex].isCollided = true;
         bullet.isCollided = true;
         this.score += 2;
-        if (this.score >= 20) {
+        if (this.score === 20) {
           this.levelUp();
           
         }
-        if (this.score >= 100) {
+        if (this.score === 200) {
           this.gameOver(true); // Pasamos `true` como argumento para indicar que es una victoria
           return;
         }
@@ -325,20 +318,32 @@ class Game {
   }
 
   clearGame() {
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.invaders = [];
-    this.level = true;
+    this.level = false;
     this.background = new Background(ctx, LEVELS[this.levelSelected].background);
   }
-
+  
+  /*nextLevel() {
+    clearInterval(this.intervalId);
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    this.ctx.font = '32px Arial';
+    this.ctx.fillText('pasando de nivel', (this.ctx.canvas.width / 2) - 50, (this.ctx.canvas.height / 2) - 20);
+    setTimeout(() => {
+        this.levelSelected++;
+        this.scores = LEVELS[this.levelSelected].scores;
+        this.start();
+    }, 5000);
+  }*/
   
 
 
   levelUp() {
     if (this.levelSelected < LEVELS.length - 1) {
       this.levelSelected++;
+      this.clearGame();
       this.level =  LEVELS[this.levelSelected].levelText;
       
-      this.clearGame();
 
 
     } 
