@@ -2,7 +2,12 @@ class Game {
   constructor(ctx) {
     this.ctx = ctx;
     this.levelSelected = 0;
-    this.background = new Background(ctx, LEVELS[this.levelSelected].background);
+    this.backgrounds = [
+      new Background(ctx, LEVELS[0].background),
+      new Background(ctx, LEVELS[1].background)
+    ]
+    this.background = this.backgrounds[this.levelSelected];
+    // this.background = new Background(ctx, LEVELS[this.levelSelected].background);
     this.player = new Player(this.ctx);
     this.heart = new Heart(this.ctx);
     this.invaderImages = [
@@ -13,7 +18,8 @@ class Game {
     this.invaders = [];
     this.bullets = [];
     this.bulletsEnemy = [];
-    this.warrior = new Warrior (this.ctx);
+    // this.warrior = new Warrior(this.ctx);
+    this.warrior = null;
     this.intervalId = null;
     this.levelSpeed = 0;
     this.counter = 0;
@@ -58,7 +64,7 @@ class Game {
         this.handleInvaderShoot();
       }
 
-      if (this.score === 80) {
+      if (this.score === 80 && !this.warrior) {
         this.addWarrior();
       }
     }, 1000 / 60);
@@ -82,7 +88,7 @@ class Game {
     });
 
     
-    this.warrior.draw();
+    this.warrior && this.warrior.draw();
     
 
     this.drawScore();
@@ -107,7 +113,7 @@ class Game {
     });
 
     
-    this.warrior.move();
+    this.warrior && this.warrior.move();
     
   }
 
@@ -151,7 +157,7 @@ class Game {
     warrior.x = Math.floor(Math.random() * (this.ctx.canvas.width - warrior.width));
     warrior.y = Math.floor(Math.random() * (this.ctx.canvas.height - warrior.height));
   
-    this.warrior.draw();
+    this.warrior = warrior;
   }
 
 
@@ -301,27 +307,30 @@ class Game {
       this.ctx.font = "18px Press-Start-2P";
       this.ctx.fillStyle = "white";
       this.ctx.fillText(
-        this.level.levelText,
-        350,
-        300
-      );
-    }
-    else if (this.levelSelected > 0) {
-      this.ctx.font = "18px Press-Start-2P";
-      this.ctx.fillStyle = "white";
-      this.ctx.fillText(
+        // this.level.levelText,
         `Level ${this.levelSelected + 1}`,
         350,
         300
       );
     }
+    // else if (this.levelSelected > 0 && this.showLevelText) {
+    //   this.ctx.font = "18px Press-Start-2P";
+    //   this.ctx.fillStyle = "white";
+    //   this.ctx.fillText(
+    //     `Level ${this.levelSelected + 1}`,
+    //     350,
+    //     300
+    //   );
+    // }
   }
 
   clearGame() {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.invaders = [];
     this.level = false;
-    this.background = new Background(ctx, LEVELS[this.levelSelected].background);
+    // this.background = new Background(ctx, LEVELS[this.levelSelected].background);
+    this.background = this.backgrounds[this.levelSelected];
+    this.background.draw();
   }
   
   /*nextLevel() {
@@ -342,10 +351,10 @@ class Game {
     if (this.levelSelected < LEVELS.length - 1) {
       this.levelSelected++;
       this.clearGame();
-      this.level =  LEVELS[this.levelSelected].levelText;
-      
-
-
+      this.showLevelText = true;
+      setTimeout(() => {
+        this.showLevelText = false;
+      }, 5000);
     } 
   }
   
