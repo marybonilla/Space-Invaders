@@ -3,8 +3,8 @@ class Warrior {
       this.ctx = ctx;
       this.image = new Image();
       this.image.src = './img/warrior.png';
-      this.width = 100;
-      this.height = 60;
+      this.width = 300;
+      this.height = 180;
       this.speedX = speedX;
       this.speedY = speedY;
       this.x = 0;
@@ -21,17 +21,40 @@ class Warrior {
     draw() {
       if (this.isReady) {
         const collisionEnemy = this.isCollided ? this.collisionImage : this.image;
-        this.ctx.drawImage(collisionEnemy, this.x, this.y, this.width, this.height);
+        this.ctx.drawImage(
+          collisionEnemy, 
+          this.x, 
+          this.y, 
+          this.width, 
+          this.height
+          );
       }
     }
   
     move() {
       this.x += this.speedX;
       this.y += this.speedY;
+
+      // para que no salga del cambas 
+      if (this.x <= 0) {
+        this.x = 0;
+      }
+  
+      if (this.x >= this.ctx.canvas.width - this.width) {
+        this.x = this.ctx.canvas.width - this.width;
+      }
+  
+      if (this.y <= 0) {
+        this.y = 0;
+      }
+  
+      if (this.y >= this.ctx.canvas.height - this.height) {
+        this.y = this.ctx.canvas.height - this.height;
+      }
     }
   
-    /*shoot() {
-      const bulletEnemyLvl = new BulletEnemy(
+    shoot() {
+      const bulletEnemy = new BulletEnemy(
         this.ctx,
         this.x + this.width / 2,
         this.y + this.height,
@@ -40,8 +63,8 @@ class Warrior {
         'White',
         5
       );
-      return bulletEnemyLvl;
-    }*/
+      return bulletEnemy;
+    }
   
     collidesWith(player) {
       return (
