@@ -1,5 +1,5 @@
 class Warrior {
-    constructor(ctx, speedX, speedY) {
+    constructor(ctx,x, speedX, speedY) {
       this.ctx = ctx;
       this.image = new Image();
       this.image.src = './img/warrior.png';
@@ -7,7 +7,7 @@ class Warrior {
       this.height = 180;
       this.speedX = speedX;
       this.speedY = speedY;
-      this.x = 0;
+      this.x = x;
       this.y = 0;
       this.isReady = false;
       this.isCollided = false;
@@ -20,6 +20,20 @@ class Warrior {
   
     draw() {
       if (this.isReady) {
+        const collisionWarrior = this.isCollided ? this.collisionImage : this.image;
+        this.ctx.drawImage(
+          collisionWarrior,
+          this.x,
+          this.y,
+          this.width,
+          this.height
+        );
+      }
+
+      /*if (this.isReady) {
+        this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+      }*/
+      /*if (this.isReady) {
         const collisionEnemy = this.isCollided ? this.collisionImage : this.image;
         this.ctx.drawImage(
           collisionEnemy, 
@@ -28,7 +42,7 @@ class Warrior {
           this.width, 
           this.height
           );
-      }
+      }*/
     }
   
     move() {

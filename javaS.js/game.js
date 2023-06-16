@@ -8,6 +8,7 @@ class Game {
     ]
     this.background = this.backgrounds[this.levelSelected];
     // this.background = new Background(ctx, LEVELS[this.levelSelected].background);
+    this.warrior = null;
     this.player = new Player(this.ctx);
     this.heart = new Heart(this.ctx);
     this.invaderImages = [
@@ -19,7 +20,7 @@ class Game {
     this.bullets = [];
     this.bulletsEnemy = [];
     // this.warrior = new Warrior(this.ctx);
-    this.warrior = null;
+    
     this.intervalId = null;
     this.levelSpeed = 0;
     this.counter = 0;
@@ -64,9 +65,16 @@ class Game {
         this.handleInvaderShoot();
       }
 
-      if (this.score === 80 && !this.warrior) {
-        this.addWarrior();
+      if (this.score >= 80 && !this.warrior) {
+        const speedX = 1; // Define el valor de speedX
+        const speedY = 0.1; // Define el valor de speedY
+        
+        this.addWarrior(speedX, speedY);
       }
+
+      /*if (this.score === 80 && !this.warrior) {
+        this.addWarrior();
+      }*/
     }, 1000 / 60);
   }
 
@@ -151,14 +159,47 @@ class Game {
         this.invaders.push(invader);
       });
     });
+    if (this.warrior) {
+      return;
+    }
   }
-  addWarrior() {
+
+  addWarrior(speedX, speedY) {
+    // Eliminar todos los invasores existentes
+    this.invaders = [];
+  
+    const warriorWidth = 50;
+    const warriorHeight = 50;
+    const warriorSpeedX = speedX; // Modifica el valor de speedX
+    const warriorSpeedY = speedY; // Modifica el valor de speedY
+  
+    const warriorX = Math.floor(Math.random() * (this.ctx.canvas.width - warriorWidth)); // Posición X inicial aleatoria
+    const warriorY = this.ctx.canvas.height; // Posición Y inicial abajo de la pantalla
+  
+    this.warrior = new Warrior(this.ctx, warriorSpeedX, warriorSpeedY, warriorX, warriorY, this.warriorImage);
+  }
+  
+
+
+
+
+  
+
+
+  /*addWarrior(speedX, speedY) {
+  const warrior = new Warrior(this.ctx, 100, speedX, speedY);
+  warrior.x = Math.floor(Math.random() * (this.ctx.canvas.width - warrior.width));
+  this.warrior = warrior;
+  }*/
+  
+
+  /*addWarrior() {
     const warrior = new Warrior(this.ctx, 1, 0);
     warrior.x = Math.floor(Math.random() * (this.ctx.canvas.width - warrior.width));
     warrior.y = Math.floor(Math.random() * (this.ctx.canvas.height - warrior.height));
   
     this.warrior = warrior;
-  }
+  }*/
 
 
     // agregar balas enemigas desde el invasor de forma random
