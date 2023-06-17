@@ -19,6 +19,7 @@ class Game {
     this.invaders = [];
     this.bullets = [];
     this.bulletsEnemy = [];
+    this.bulletsWarrior = [];
     // this.warrior = new Warrior(this.ctx);
 
     this.intervalId = null;
@@ -65,6 +66,11 @@ class Game {
         this.handleInvaderShoot();
       }
 
+      if (this.warrior && this.counter % 100 === 0) {
+        this.handleWarriorShoot();
+      }
+
+
       if (this.score >= 80 && !this.warrior) {
         const speedX = 0; // Define el valor de speedX
         const speedY = 0.1; // Define el valor de speedY
@@ -95,6 +101,10 @@ class Game {
       bulletEnemy.draw();
     });
 
+    this.bulletsWarrior.forEach((bulletWarrior) => {
+      bulletWarrior.draw();
+    });
+
     this.warrior && this.warrior.draw();
 
     this.drawScore();
@@ -118,6 +128,10 @@ class Game {
       bulletEnemy.move();
     });
 
+    this.bulletsWarrior.forEach((bulletWarrior) => {
+      bulletWarrior.move();
+    });
+
     this.warrior && this.warrior.move();
   }
 
@@ -129,6 +143,9 @@ class Game {
     this.bullets = this.bullets.filter((bullet) => bullet.y > 0);
     this.bulletsEnemy = this.bulletsEnemy.filter(
       (bulletEnemy) => bulletEnemy.y < this.ctx.canvas.height
+    );
+    this.bulletsWarrior = this.bulletsWarrior.filter(
+      (bulletWarrior) => bulletWarrior.y < this.ctx.canvas.height
     );
   }
 
@@ -214,7 +231,14 @@ class Game {
           this.bulletsEnemy.push(bulletEnemy);
         }
       }
-    }, 2000);
+    }, 3000);
+  }
+
+  handleWarriorShoot() {
+    if (this.warrior) {
+      const bulletWarrior = this.warrior.shoot();
+      this.bulletsWarrior.push(bulletWarrior);
+    }
   }
 
   handleKeyDown(event) {
@@ -269,9 +293,13 @@ class Game {
     const bulletECollisionIndex = this.bulletsEnemy.findIndex((bulletEnemy) =>
       bulletEnemy.collidesWith(this.player)
     );
-    const warriorCollinsion = this.warrior.findIndex((warrior) => warrior.collidesWith (this.player))
+    const warriorCollinsion = this.warrior && this.warrior.collidesWith(this.player);
 
-    if (invaderCollisionIndex !== -1 || bulletECollisionIndex !== -1) {
+    const bulletWarriorColision = this.bulletsWarrior.findIndex((bulletWarrior) =>
+    bulletWarrior.collidesWith(this.player)
+    );
+
+    if (invaderCollisionIndex !== -1 || bulletECollisionIndex !== -1 || (this.warrior && warriorCollinsion) ||  bulletWarriorColision !== -1) {
       this.lives--;
 
       if (this.lives < 1) {
@@ -288,12 +316,22 @@ class Game {
           this.player.isCollided = true;
           this.player.collisionBlackTimer = 2;
         }
+        if (this.warrior && warriorCollinsion) {
+          this.warrior.isCollided = true;
+          
+        }
+        if (bulletWarriorColision !== -1) {
+          this.bulletsWarrior[bulletWarriorColision].isCollided = true;
+          this.player.isCollided = true;
+          this.player.collisionImageTimer = 2;
+          
+        }
+        /*if(this.warrior.hits === 0){
+          this.warrior.isCollided = true;
+          this.gameOver(isVictory);
+        }*/
       }
-      /*if (this.score === 80 && !this.warrior) {
-        this.warrior = new Warrior(this.ctx, 1, 0);
-        this.warrior.x = Math.floor(Math.random() * (this.ctx.canvas.width - this.warrior.width));
-        this.warrior.y = Math.floor(Math.random() * (this.ctx.canvas.height - this.warrior.height));
-      }*/
+
 
       if (this.score >= 1000) {
         this.gameOver(true); // Pasamos `true` como argumento para indicar que es una victoria
@@ -301,6 +339,8 @@ class Game {
       }
     }
   }
+
+
 
   // Cuando la bala de nave colisiona con un invader, el invader muere
 
@@ -323,11 +363,26 @@ class Game {
       }
     });
 
+    this.bullets.forEach((bullet) => {
+      const hasCollided = this.warrior && !this.warrior.isCollided && this.warrior.collidesWith(bullet);
+      if (hasCollided) {
+        this.warrior.hits--;
+        bullet.isCollided = true;
+        if (this.warrior.hits === 0) {
+          this.warrior.isCollided = true;
+          console.log("collided");
+        }
+      }
+    })
+
     // Eliminar los invasores y las balas colisionadas
     this.invaders = this.invaders.filter((invader) => !invader.isCollided);
     this.bullets = this.bullets.filter((bullet) => !bullet.isCollided);
     this.bulletsEnemy = this.bulletsEnemy.filter(
       (bulletEnemy) => !bulletEnemy.isCollided
+    );
+    this.bulletsWarrior = this.bulletsWarrior.filter(
+      (bulletWarrior) => !bulletWarrior.isCollided
     );
   }
 
@@ -355,15 +410,7 @@ class Game {
         300
       );
     }
-    // else if (this.levelSelected > 0 && this.showLevelText) {
-    //   this.ctx.font = "18px Press-Start-2P";
-    //   this.ctx.fillStyle = "white";
-    //   this.ctx.fillText(
-    //     `Level ${this.levelSelected + 1}`,
-    //     350,
-    //     300
-    //   );
-    // }
+   
   }
 
   clearGame() {
@@ -375,17 +422,6 @@ class Game {
     this.background.draw();
   }
 
-  /*nextLevel() {
-    clearInterval(this.intervalId);
-    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    this.ctx.font = '32px Arial';
-    this.ctx.fillText('pasando de nivel', (this.ctx.canvas.width / 2) - 50, (this.ctx.canvas.height / 2) - 20);
-    setTimeout(() => {
-        this.levelSelected++;
-        this.scores = LEVELS[this.levelSelected].scores;
-        this.start();
-    }, 5000);
-  }*/
 
   levelUp() {
     if (this.levelSelected < LEVELS.length - 1) {

@@ -3,6 +3,8 @@ class Warrior {
       this.ctx = ctx;
       this.image = new Image();
       this.image.src = './img/warrior.png';
+      this.collisionImage = new Image();
+      this.collisionImage.src = './img/warriorcolision.png';
       this.width = 300;
       this.height = 180;
       this.speedX = speedX;
@@ -11,43 +13,54 @@ class Warrior {
       this.y = 0;
       this.isReady = false;
       this.isCollided = false;
+      this.hits = 3;
+      this.collisionImageTimer = 0;
+      this.collisionDuration = 0.5;
   
       this.image.onload = () => {
         this.width = (this.height * this.image.width) / this.image.height;
         this.isReady = true;
       };
+
+      this.collisionImage.onload = () => {
+        this.isReady = true;
+      };
     }
   
     draw() {
+      //const collisionWarrior = this.isCollided ? this.collisionImage : this.image;
       if (this.isReady) {
-        const collisionWarrior = this.isCollided ? this.collisionImage : this.image;
-        this.ctx.drawImage(
-          collisionWarrior,
-          this.x,
-          this.y,
-          this.width,
-          this.height
-        );
+        if (this.isCollided && this.collisionImageTimer > 0) {
+          this.ctx.drawImage(
+            this.collisionImage,
+            this.x,
+            this.y,
+            this.width,
+            this.height
+          );
+          this.collisionImageTimer--;
+        } else {
+          this.ctx.drawImage(
+            this.image,
+            this.x,
+            this.y,
+            this.width,
+            this.height
+          );
+        }
       }
 
-      /*if (this.isReady) {
-        this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-      }*/
-      /*if (this.isReady) {
-        const collisionEnemy = this.isCollided ? this.collisionImage : this.image;
-        this.ctx.drawImage(
-          collisionEnemy, 
-          this.x, 
-          this.y, 
-          this.width, 
-          this.height
-          );
-      }*/
-    }
+    
+  }
   
     move() {
       this.x += this.speedX;
       this.y += this.speedY;
+
+      if (this.isCollided && this.collisionImageTimer === 0) {
+        this.isCollided = false;
+      }
+    
 
       // para que no salga del cambas 
       if (this.x <= 0) {
@@ -68,24 +81,30 @@ class Warrior {
     }
   
     shoot() {
-      const bulletEnemy = new BulletEnemy(
+      const bulletWarrior = new BulletWarrior(
         this.ctx,
         this.x + this.width / 2,
         this.y + this.height,
-        6,
-        15,
+        5,
+        20,
         'White',
         5
       );
-      return bulletEnemy;
+      return bulletWarrior;
     }
   
     collidesWith(player) {
-      return (
-        player.x + player.width > this.x &&
+      if (player.x + player.width > this.x &&
         player.x < this.x + this.width &&
         player.y + player.height > this.y &&
-        player.y < this.y + this.height
-      );
+        player.y < this.y + this.height) {
+        
+        this.isCollided = true;
+        this.collisionImageTimer = this.collisionDuration * 60; // 60 frames por segundo
+      
+        return true;
+      }
+      
+      return false;
     }
   }
