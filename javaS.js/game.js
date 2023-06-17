@@ -186,20 +186,6 @@ class Game {
     }
   }
 
-  /*addWarrior(speedX, speedY) {
-    // Eliminar todos los invasores existentes
-    this.invaders = [];
-  
-    const warriorWidth = 50;
-    const warriorHeight = 50;
-    const warriorSpeedX = speedX; // Modifica el valor de speedX
-    const warriorSpeedY = speedY; // Modifica el valor de speedY
-  
-    const warriorX = Math.floor(Math.random() * (this.ctx.canvas.width - warriorWidth)); // Posición X inicial aleatoria
-    const warriorY = this.ctx.canvas.height; // Posición Y inicial abajo de la pantalla
-  
-    this.warrior = new Warrior(this.ctx, warriorSpeedX, warriorSpeedY, warriorX, warriorY, this.warriorImage);
-  }*/
 
   addWarrior(speedX, speedY) {
     this.invaders = [];
@@ -211,13 +197,6 @@ class Game {
     this.warrior = warrior;
   }
 
-  /*addWarrior() {
-    const warrior = new Warrior(this.ctx, 1, 0);
-    warrior.x = Math.floor(Math.random() * (this.ctx.canvas.width - warrior.width));
-    warrior.y = Math.floor(Math.random() * (this.ctx.canvas.height - warrior.height));
-  
-    this.warrior = warrior;
-  }*/
 
   // agregar balas enemigas desde el invasor de forma random
 
@@ -376,6 +355,7 @@ class Game {
     })
 
     // Eliminar los invasores y las balas colisionadas
+
     this.invaders = this.invaders.filter((invader) => !invader.isCollided);
     this.bullets = this.bullets.filter((bullet) => !bullet.isCollided);
     this.bulletsEnemy = this.bulletsEnemy.filter(
