@@ -40,11 +40,11 @@ class Game {
 
     setTimeout(() => {
       this.showLevelText = false;
-    }, 3000);
+    }, 2000);
 
     setTimeout(() => {
       this.addInvader();
-    }, 1000);
+    }, 800);
 
     this.intervalId = setInterval(() => {
       this.clear();
@@ -58,7 +58,7 @@ class Game {
         this.clear();
       }
 
-      if (this.counter % 900 === 0) {
+      if (this.counter % 700 === 0) {
         this.addInvader();
       }
 
@@ -78,9 +78,6 @@ class Game {
         this.addWarrior(speedX, speedY);
       }
 
-      /*if (this.score === 80 && !this.warrior) {
-        this.addWarrior();
-      }*/
     }, 1000 / 60);
   }
 
@@ -347,9 +344,10 @@ class Game {
       if (hasCollided) {
         this.warrior.hits--;
         bullet.isCollided = true;
+        this.score += 2;
         if (this.warrior.hits === 0) {
           this.warrior.isCollided = true;
-          console.log("collided");
+          //console.log("collided");
         }
       }
     })

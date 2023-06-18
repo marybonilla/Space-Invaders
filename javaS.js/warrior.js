@@ -13,7 +13,7 @@ class Warrior {
       this.y = 0;
       this.isReady = false;
       this.isCollided = false;
-      this.hits = 3;
+      this.hits = 6;
       this.collisionImageTimer = 0;
       this.collisionDuration = 0.5;
   
