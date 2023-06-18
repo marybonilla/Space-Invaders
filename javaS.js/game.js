@@ -26,7 +26,7 @@ class Game {
     this.levelSpeed = 0;
     this.counter = 0;
     this.score = 0;
-    this.lives = 3;
+    this.lives = 5;
     this.level = LEVELS[this.levelSelected].levelText;
     this.bulletSound = new Audio("./sound/bulletNave.wav");
     this.explosionPlayer = new Audio("./sound/explosion.wav");
@@ -71,7 +71,7 @@ class Game {
       }
 
 
-      if (this.score >= 80 && !this.warrior) {
+      if (this.score >= 140 && !this.warrior) {
         const speedX = 0; // Define el valor de speedX
         const speedY = 0.1; // Define el valor de speedY
 
@@ -309,7 +309,7 @@ class Game {
       }
 
 
-      if (this.score >= 1000) {
+      if (this.score >= 280) {
         this.gameOver(true); // Pasamos `true` como argumento para indicar que es una victoria
         return;
       }
@@ -329,10 +329,10 @@ class Game {
         this.invaders[bulletCollisionIndex].isCollided = true;
         bullet.isCollided = true;
         this.score += 2;
-        if (this.score === 20) {
+        if (this.score === 100) {
           this.levelUp();
         }
-        if (this.score === 200) {
+        if (this.score === 280) {
           this.gameOver(true); // Pasamos `true` como argumento para indicar que es una victoria
           return;
         }
@@ -345,6 +345,7 @@ class Game {
         this.warrior.hits--;
         bullet.isCollided = true;
         this.score += 2;
+        
         if (this.warrior.hits === 0) {
           this.warrior.isCollided = true;
           //console.log("collided");
@@ -412,34 +413,55 @@ class Game {
     }
   }
 
-  gameOver(isVictory) {
-    clearInterval(this.intervalId);
-    setTimeout(() => {
-      this.player.draw();
-      this.ctx.font = "60px Press-Start-2P";
-      this.ctx.fillStyle = "white";
-      if (isVictory) {
-        this.ctx.fillStyle = "Green";
-        this.ctx.fillText(
-          "¡Victory!",
-          this.ctx.canvas.width / 2 - 100,
-          this.ctx.canvas.height / 2,
-          200
-        );
-      } else {
-        this.ctx.fillText(
-          "Game Over",
-          this.ctx.canvas.width / 2 - 100,
-          this.ctx.canvas.height / 2,
-          200
-        );
-      }
-      this.ctx.font = "15px Press-Start-2P";
-      this.ctx.fillText(
-        `you final Score: ${this.score}`,
-        this.ctx.canvas.width / 2 - 140,
-        this.ctx.canvas.height / 2 + 30
-      );
-    }, 0);
-  }
+  reset() {
+  clearInterval(this.intervalId);
+  this.levelSelected = 0;
+  this.background = this.backgrounds[this.levelSelected];
+  this.warrior = null;
+  this.player = new Player(this.ctx);
+  this.invaders = [];
+  this.bullets = [];
+  this.bulletsEnemy = [];
+  this.bulletsWarrior = [];
+  this.intervalId = null;
+  this.levelSpeed = 0;
+  this.counter = 0;
+  this.score = 0;
+  this.lives = 5;
+  this.level = LEVELS[this.levelSelected].levelText;
+  this.start();
+}
+
+gameOver(isVictory) {
+  clearInterval(this.intervalId);
+
+  const gameOverText = isVictory ? "Victory!" : "Game Over";
+  const scoreText = `Your final Score: ${this.score}`;
+
+  const resetButton = document.createElement("button");
+  resetButton.innerText = "Reset";
+  resetButton.id = "reset-button";
+  resetButton.addEventListener("click", () => {
+    window.location.href = "index.html"; // Reemplaza "index.html" con la URL de tu pantalla de inicio
+  });
+
+  this.player.draw();
+  this.ctx.font = "60px Press-Start-2P";
+  this.ctx.fillStyle = isVictory ? "green" : "white";
+  this.ctx.fillText(
+    gameOverText,
+    this.ctx.canvas.width / 2 - 100,
+    this.ctx.canvas.height / 2,
+    200
+  );
+
+  this.ctx.font = "15px Press-Start-2P";
+  this.ctx.fillText(
+    scoreText,
+    this.ctx.canvas.width / 2 - 140,
+    this.ctx.canvas.height / 2 + 30
+  );
+
+  document.body.appendChild(resetButton);
+}
 }
