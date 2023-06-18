@@ -260,7 +260,7 @@ class Game {
     }
   }
 
-  // Cuando el invasor colisiona con el jugados, el jugador muere
+  // Cuando el invasor colisiona con el jugador, el jugador muere
 
   checkCollisions() {
     const invaderCollisionIndex = this.invaders.findIndex((invader) =>
@@ -299,12 +299,12 @@ class Game {
         if (bulletWarriorColision !== -1) {
           this.bulletsWarrior[bulletWarriorColision].isCollided = true;
           this.player.isCollided = true;
-          this.player.collisionImageTimer = 2;
-          
+          this.player.collisionBlackTimer = 2;
+          //this.player.currentImage = this.player.collisionBlack; // Actualiza la imagen del jugador al colisionar con la bala del guerrero
         }
         if(this.warrior && this.warrior.hits === 0){
           this.warrior.isCollided = true
-          this.gameOver(isVictory);
+        
         }
       }
 
@@ -408,7 +408,7 @@ class Game {
       this.showLevelText = true;
       setTimeout(() => {
         this.showLevelText = false;
-      }, 5000);
+      }, 2000);
     }
   }
 
