@@ -30,7 +30,7 @@ class Warrior {
     draw() {
       //const collisionWarrior = this.isCollided ? this.collisionImage : this.image;
       if (this.isReady) {
-        if (this.isCollided && this.collisionImageTimer > 0) {
+        if (this.collisionImageTimer > 0) {
           this.ctx.drawImage(
             this.collisionImage,
             this.x,
@@ -99,7 +99,6 @@ class Warrior {
         player.y + player.height > this.y &&
         player.y < this.y + this.height) {
         
-        this.isCollided = true;
         this.collisionImageTimer = this.collisionDuration * 60; // 60 frames por segundo
       
         return true;

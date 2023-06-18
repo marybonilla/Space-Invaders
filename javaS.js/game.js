@@ -66,7 +66,7 @@ class Game {
         this.handleInvaderShoot();
       }
 
-      if (this.warrior && this.counter % 100 === 0) {
+      if (this.warrior && !this.warrior.isCollided && this.counter % 100 === 0) {
         this.handleWarriorShoot();
       }
 
@@ -105,7 +105,7 @@ class Game {
       bulletWarrior.draw();
     });
 
-    this.warrior && this.warrior.draw();
+    this.warrior && !this.warrior.isCollided && this.warrior.draw();
 
     this.drawScore();
     this.drawLives();
@@ -132,7 +132,7 @@ class Game {
       bulletWarrior.move();
     });
 
-    this.warrior && this.warrior.move();
+    this.warrior && !this.warrior.isCollided && this.warrior.move();
   }
 
   clear() {
@@ -210,7 +210,7 @@ class Game {
           this.bulletsEnemy.push(bulletEnemy);
         }
       }
-    }, 3000);
+    }, 2000);
   }
 
   handleWarriorShoot() {
@@ -305,10 +305,10 @@ class Game {
           this.player.collisionImageTimer = 2;
           
         }
-        /*if(this.warrior.hits === 0){
-          this.warrior.isCollided = true;
+        if(this.warrior && this.warrior.hits === 0){
+          this.warrior.isCollided = true
           this.gameOver(isVictory);
-        }*/
+        }
       }
 
 
