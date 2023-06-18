@@ -41,3 +41,23 @@ button {
     background-color: #A80F00;
     color: white;
   }
+
+  .playMusic{
+    position: absolute;
+    top: 577px;
+    left: 73px;
+    transform: translate(-50%, -50%);
+    border: 1px solid #FFFC00;
+    padding: 10px;
+    background-color: rgba(253, 29, 4, 0.548);
+    color: black;
+    font-size: 10px;
+    border-radius: 50px;
+
+  }
+
+  .playMusic:hover{
+    cursor: pointer;
+    background-color: #A80F00;
+    color: white;
+  }

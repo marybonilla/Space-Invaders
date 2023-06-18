@@ -1,14 +1,21 @@
 
+
 const startButton = document.querySelector("#button");
 const canvas = document.querySelector('#my-canvas');
 const ctx = canvas.getContext ('2d');
+const playMusic = document.querySelector(".playMusic");
 
+playMusic.addEventListener("click", function(){
+    const audio = document.querySelector("audio");
+    audio.play();  
+})
 
 
 
 
 startButton.addEventListener("click", function() {
     startButton.style.display = "none";
+    playMusic.style.display = "none";
     const audio = document.querySelector("audio");
     audio.pause();
     const game = new Game(ctx);
@@ -20,6 +27,3 @@ startButton.addEventListener("click", function() {
     const image = document.getElementById('my-canvas');
     image.style.backgroundImage = 'none'; // Elimina la imagen de fondo al iniciar el juego
   });
-
-
-
