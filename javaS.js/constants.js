@@ -1,6 +1,6 @@
 const LEVEL_1 = {
-    background: "../img/bg-1.jpeg",
-    bullet: "../img/bullet-01.png",
+    background: "./img/bg-1.jpeg",
+    bullet: "./img/bullet-01.png",
     bulletOffsetX: 15,
     bulletWidth:10,
     bulletHeight:12,
@@ -12,8 +12,8 @@ const LEVEL_1 = {
 
 
 const LEVEL_2 = {
-    background: "../img/BGLEVEL2.jpeg",
-    bullet: "../img/bulletdoble-01.png",
+    background: "./img/BGLEVEL2.jpeg",
+    bullet: "./img/bulletdoble-01.png",
     bulletOffsetX: 0,
     bulletWidth: 4,
     bulletHeight: 45,
