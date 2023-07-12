@@ -309,7 +309,7 @@ class Game {
       }
 
 
-      if (this.score >= 280) {
+      if (this.score >= 230) {
         this.gameOver(true); // Pasamos `true` como argumento para indicar que es una victoria
         return;
       }
@@ -366,21 +366,21 @@ class Game {
   }
 
   drawScore() {
-    this.ctx.font = "15px Press-Start-2P";
+    this.ctx.font = "18px Silkscreen";
     this.ctx.fillStyle = "white";
     this.ctx.fillText(`Score: ${this.score}`, 10, 30);
   }
   drawLives() {
     this.image = new Image();
     this.image.src = "./img/heart.png";
-    this.ctx.font = "18px Press-Start-2P";
+    this.ctx.font = "25px Silkscreen";
     this.ctx.fillStyle = "white";
     this.ctx.fillText(`${this.lives}`, 730, 30);
   }
 
   drawLevel() {
     if (this.showLevelText) {
-      this.ctx.font = "18px Press-Start-2P";
+      this.ctx.font = "25px Silkscreen";
       this.ctx.fillStyle = "white";
       this.ctx.fillText(
         // this.level.levelText,
@@ -446,7 +446,7 @@ gameOver(isVictory) {
   });
 
   this.player.draw();
-  this.ctx.font = "60px Press-Start-2P";
+  this.ctx.font = "80px Silkscreen";
   this.ctx.fillStyle = isVictory ? "green" : "white";
   this.ctx.fillText(
     gameOverText,
@@ -455,10 +455,10 @@ gameOver(isVictory) {
     200
   );
 
-  this.ctx.font = "15px Press-Start-2P";
+  this.ctx.font = "15px Silkscreen";
   this.ctx.fillText(
     scoreText,
-    this.ctx.canvas.width / 2 - 140,
+    this.ctx.canvas.width / 2 - 100,
     this.ctx.canvas.height / 2 + 30
   );
 
