@@ -4,7 +4,7 @@ class Warrior {
       this.image = new Image();
       this.image.src = './img/warrior.png';
       this.collisionImage = new Image();
-      this.collisionImage.src = './img/warriorcolision.png';
+      this.collisionImage.src = './img/warriorColision.png';
       this.width = 300;
       this.height = 180;
       this.speedX = speedX;
